@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>&rAarr; School| App</title>
+    <meta name="description" content="school app.">
+    <meta name="author" content="">
+    <!-- IE Edge Meta tag (X means to render in the latest engine) -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Viewport , set to the natural device width and set the initial scale to 1.0 to stop shrinking of the website on Mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/css/form-elements.css') }}">
+   <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/fonts/font-awesome.min.css') }}">
+    <!-- custom css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static',filename='js/jquery-2.2.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='css/bootstrap/js/bootstrap.js')}}"></script>
+    <!--<script src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyDENK9Y6WBER9YHIJAQ8DAsSuAdzPXZ9Ew"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='')}}"></script>
+    <!-- Favicon
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="shortcut icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+</head>
+<html>
+<body>
+    <nav class="navbar navbar-inverse gradient"
+         data-spy="affix"
+         role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#brand"><span>School | App</span></a>
+            </div><!-- navbar-header -->
+            <div class="collapse navbar-collapse" id="collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="/login" data-offset="0">Home</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                    <li class=""><a href="/courses" data-offset="0">Add Courses</a></li>
+                    <li class=""><a href="/studentwall" data-offset="0">Student Blog</a></li>
+                </ul>
+            </div><!-- collapse navbar-collapse -->
+        </div><!-- container -->
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+          <div id="map-outer" class="col-md-12">
+              <div id="address" class="col-md-4">
+                <h2>Your School Location</h2>
+                <address>
+                <strong>San Jose State University</strong><br>
+                    1 Washington sq,<br>
+                    San Jose,<br>
+                    California 95192<br>
+                    <abbr>P:</abbr> (408) 924-1000
+
+               </address>
+              </div>
+              <div id="map-container" class="col-sm-6 col-md-12"></div>
+          </div><!-- /map-outer -->
+    </div>
+    <input id="location" type="hidden" value="{{locations}}">
+    <div id="map"></div>
+
+  <script type="text/javascript">
+      var data = $('#location').val();
+      var data1 = JSON.parse(data);
+      console.log(data1[0]);
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 17,
+      center: new google.maps.LatLng(37.335268, -121.881361),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    var infowindow = new google.maps.InfoWindow({
+        maxWidth: 300,
+        maxHeight: 200
+    });
+
+    var marker, i;
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+    for(var i =0; i < data1.length; i++) {
+        console.log("hello", i, data1[i])
+        console.log(data1[i]['Lat']);
+        console.log(data1[i]['Lng']);
+        marker = new google.maps.Marker({
+        position: new google.maps.LatLng(data1[i]['Lng'] , data1[i]['Lat']),
+        map: map,
+        icon: iconBase + 'schools_maps.png'
+      });
+        marker.addListener('click', function(){
+         infowindow.open(map, marker);
+       });
+      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+        return function() {
+            htmlStr = '';
+            htmlStr += "<h4>Here is your class info:</h4>";
+            htmlStr += "<p>"+data1[i]['building_name'] +"</p>";
+            htmlStr += "<p><ul>";
+            var course_list = data1[i]['course_name'].split(",");
+            for (var j = 0; j<course_list.length; j++) {
+                htmlStr += "<li>" + course_list[j] + "<a href='/courses_page/"+ course_list[j]+"' target='_blank'> Course info</a>" + "</li>";
+            }
+            htmlStr += "</ul></p>";
+//            htmlStr += "<p>"+data1[i]['course_name'] +"</p>";
+
+//            htmlStr +="<a href='http://www.sjsu.edu/' target='_blank'>Course info</a>";
+
+            infowindow.setContent(htmlStr);
+            infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+//        console.log("hello", i, data1[i])
+//        console.log(data1[i]['Lat']);
+//        console.log(data1[i]['Lng']);
+//        marker = new google.maps.Marker({
+//        position: new google.maps.LatLng(data1[i]['Lng'] , data1[i]['Lat']),
+//        map: map,
+//        icon: iconBase + 'schools_maps.png'
+//      });
+//        marker.addListener('click', function(){
+//         infowindow.open(map, marker);
+//       });
+//      google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
+//        return function() {
+//            htmlStr = '';
+//            htmlStr += "<h4>Here is your class info:</h4>";
+//            htmlStr += "<p>"+data1[i]['building_name'] +"</p>";
+//
+//            htmlStr += "<p>"+data1[i]['course_name'] +"</p>";
+//
+//            htmlStr +="<a href='http://www.sjsu.edu/' target='_blank'>Course info</a>";
+//
+//            infowindow.setContent(htmlStr);
+//            infowindow.open(map, marker);
+//        }
+//      })(marker, i));
+//    }
+  </script>
+</div>
+</body>
+</html>

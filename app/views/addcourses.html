@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>&rAarr; School| App</title>
+    <meta name="description" content="school app.">
+    <meta name="author" content="">
+    <!-- IE Edge Meta tag (X means to render in the latest engine) -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Viewport , set to the natural device width and set the initial scale to 1.0 to stop shrinking of the website on Mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bootstrap/css/bootstrap.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/css/form-elements.css') }}">
+
+   <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/fonts/font-awesome.min.css') }}">
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="{{ url_for('static',filename='js/jquery-2.2.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='css/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Favicon
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="shortcut icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+</head>
+<body>
+    <nav class="navbar navbar-inverse gradient"
+         data-spy="affix"
+         role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#brand"><span>School | App</span></a>
+            </div><!-- navbar-header -->
+            <div class="collapse navbar-collapse" id="collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class=""><a href="/" data-offset="0">Home</a></li>
+                    <li class=""><a href="/logout" data-offset="0">Logout</a></li>
+                </ul>
+            </div><!-- collapse navbar-collapse -->
+        </div><!-- container -->
+    </nav>
+
+    <div class="container">
+        <div class="row centered-form">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+        	<div class="panel panel-default">
+        		<div class="panel-heading">
+			    		<h3 class="panel-title">Add Courses</h3>
+                </div>
+            <div class="panel-body">
+            <form role="form" class="form-registration" action="/add_courses" method="post">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <label>Select Course to Add:</label>
+                            <select name="courses" multiple class="form-control input-sm" placeholder="course number">
+                              {% for course in courses %}
+                                <option value="{{course.id}}">{{course.course_number}} - {{course.description}}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Add courses" class="btn btn-info btn-block">
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+copy whole file studentwall.html
+
+put following  lines in route.py
+
+routes['POST']['/message'] ="Sessions#add_post"
+routes['POST']['/delete/<post_id>'] ="Sessions#delete_post"
+routes['POST']['/comment/<post_id>'] ="Sessions#add_comment"
+
+  put following  lines in Session.py
+
+    def studentwall(self):
+        messages = self.models['Student'].getmessages()
+        students  = self.models['Student'].get_students()
+        print students
+        for message in messages:
+            comments = self.models['Student'].getComments(session['user_id'],message['id'])
+            message['comments'] = comments
+        return self.load_view('studentwall.html',messages =messages,students=students)
+      
+
+    def add_post(self):
+        messages = self.models['Student'].message(request.form['user_id'],request.form['message'])
+        flash("Message posted successfully","message_success")
+        return redirect("/studentwall")
+
+    def delete_post(self,post_id):
+        messages = self.models['Student'].delete_message(post_id)
+        flash("Message deleted successfully","message_success")
+        return redirect("/studentwall")
+   
+    def add_comment(self,post_id):
+        messages = self.models['Student'].add_comment(session['user_id'],post_id,request.form['comment'])
+        flash("Comment posted successfully","message_success")
+        return redirect("/studentwall")
+
+
+put this lines in Student.py
+
+
+      def message(self,student_id,message):
+            sql = "insert into posts (student_id,content,created_at,updated_at) values (:student_id,:message,NOW(),NOW())"
+            data = {
+                "student_id": student_id,
+                "message": message
+            }
+            return self.db.query_db(sql, data)
+
+        def delete_message(self,post_id):
+            sql = "delete from messages  where post_id = :post_id"
+            data = {
+                "post_id": post_id
+            }
+            self.db.query_db(sql, data) 
+            sql = "delete from posts  where id = :post_id"
+            return self.db.query_db(sql, data)    
+
+        def get_students(self):
+            sql = "select * from students"
+            return self.db.query_db(sql)
+            
+        def getmessages(self):
+            sql = "select distinct p.* from posts p left join messages m  on p.id = m.post_id  order by m.created_at desc,p.created_at desc"
+            return self.db.query_db(sql)
+
+        def getComments(self,student_id,post_id):
+            data = {
+                "student_id": student_id,
+                "post_id" : post_id
+            }
+            sql = "select * from messages where student_id = :student_id and post_id = :post_id order by created_at desc"
+            return self.db.query_db(sql, data)
+
+        def add_comment(self,student_id,post_id,comment):
+            sql = "insert into messages (student_id,post_id,content,created_at,updated_at) values (:student_id,:post_id,:comment,NOW(),NOW())"
+            data = {
+                "student_id": student_id,
+                "comment": comment,
+                "post_id" : post_id
+            }
+            return self.db.query_db(sql, data)
+

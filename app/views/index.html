@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+​
+<head>
+    <meta charset="UTF-8">
+    <title>&rAarr; School| App</title>
+    <meta name="description" content="school app.">
+    <meta name="author" content="">
+    <!-- IE Edge Meta tag (X means to render in the latest engine) -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Viewport , set to the natural device width and set the initial scale to 1.0 to stop shrinking of the website on Mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bootstrap/css/bootstrap.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/css/form-elements.css') }}">
+
+   <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/fonts/font-awesome.min.css') }}">
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="{{ url_for('static',filename='js/jquery-2.2.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='css/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Favicon
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="shortcut icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+
+    <script>
+  // This is called with the results from from FB.getLoginStatus().
+  function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      // The person is logged into Facebook, but not your app.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+    } else {
+      // The person is not logged into Facebook, so we're not sure if
+      // they are logged into this app or not.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into Facebook.';
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '487640164775603',
+    cookie     : true,  // enable cookies to allow the server to access
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.5' // use graph api version 2.5
+  });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me?fields=email,first_name,last_name', function(response) {
+      console.log('Successful login for: ' + response.name);
+      //document.getElementById('status').innerHTML =
+      //'Thanks for logging in, ' + response.name + '!';
+      window.location = "/facebook_success/" + response.email+ "/" + response.first_name + "/" + response.last_name
+    });
+  }
+</script>
+
+</head>
+​
+<body>
+    <nav class="navbar navbar-inverse gradient"
+         data-spy="affix"
+         role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#brand"><span>School | App</span></a>
+            </div><!-- navbar-header -->
+            <div class="collapse navbar-collapse" id="collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="active"><a href="/" data-offset="0">Home</a></li>
+                </ul>
+            </div><!-- collapse navbar-collapse -->
+        </div><!-- container -->
+    </nav>
+​
+    <div class="container">
+
+        <div class="row centered-form">
+        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+        	<div class="panel panel-default">
+        		<div class="panel-heading">
+			    		<h3 class="panel-title">Signin</h3>
+			 			</div>
+			 			<div class="panel-body">
+			    		<form role="form" class="form-registration" action="/login" method="post">
+			    			<div class="row">
+			    				<div class="col-xs-12 col-sm-12 col-md-12">
+			    					<div class="form-group">
+                                        <label>Email Address:</label>
+			                            <input type="text" name="email" class="form-control input-sm" placeholder="Email">
+                                            {% with messages = get_flashed_messages(category_filter = ['no_email']) %}
+                                            {% for message in messages %}
+                                            <p class="error">{{message}}</p>
+                                            {% endfor %}
+                                            {% endwith %}
+                                    </div>
+			    				</div>
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+			    					<div class="form-group">
+                                        <label>Password:</label>
+			                            <input type="password" name="pwd" class="form-control input-sm" placeholder="Password">
+			    					        {% with messages = get_flashed_messages(category_filter = ['no_pwd']) %}
+                                            {% for message in messages %}
+                                            <p class="error">{{message}}</p>
+                                            {% endfor %}
+                                            {% endwith %}
+                                    </div>
+			    				</div>
+                                <input type="submit" value="Sign In" class="btn btn-success btn-block">
+                                <br>
+                                <a href="/register" class="register-link">Don't have an account? Register.</a>
+
+                            </div>
+			    		</form>
+			    	</div>
+	    		</div>
+    		</div>
+    	</div>
+        <div class="jumbotron">
+            <div class="container">
+                <h2 id="fb">Sign in with Facebook</h2>
+                <form action="#" method="post">
+                    <a id="facebook_btn">
+                        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                </a>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

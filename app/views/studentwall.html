@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>&rAarr; School| App</title>
+    <meta name="description" content="school app.">
+    <meta name="author" content="">
+    <!-- IE Edge Meta tag (X means to render in the latest engine) -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Viewport , set to the natural device width and set the initial scale to 1.0 to stop shrinking of the website on Mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bootstrap/css/bootstrap.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/css/form-elements.css') }}">
+
+   <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/fonts/font-awesome.min.css') }}">
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="{{ url_for('static',filename='js/jquery-2.2.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='css/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Favicon
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="shortcut icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+
+  </head>
+<body>
+    <nav class="navbar navbar-inverse gradient"
+         data-spy="affix"
+         role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#brand"><span>School | App</span></a>
+            </div><!-- navbar-header -->
+            <div class="collapse navbar-collapse" id="collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class=""><a href="/" data-offset="0">Home</a></li>
+                    <li class=""><a href="/courses" data-offset="0">Add Courses</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div><!-- collapse navbar-collapse -->
+        </div><!-- container -->
+    </nav>
+
+    !-- Begin page content -->
+    <div class="content container">
+        <!-- about me section -->
+        <div class="row">
+            <div class="col-sm-12">
+                <section>
+                    <!--{% if users %}-->
+                    <!--{% for user in users %}-->
+                    <div class="jumbotron">
+                      <h1 class="display-3">student name</h1>
+                      <p class="lead"></p>
+                      <p class="lead"></p>
+                      <p class="lead"></p>
+                      <p class="lead"></p>
+                      <hr class="m-y-2">
+                    </div>
+                    <!--{% endfor %}-->
+                    <!--{% endif %}-->
+                </section>
+            </div>
+        </div>
+         {% with messages = get_flashed_messages(category_filter = ['message_success']) %}         
+                {% for message in messages %}
+                    <p class="alert alert-success">{{message}}</p> 
+                {% endfor %}   
+        {% endwith %}
+        <div class="row">
+            <div class="col-sm-12">
+                <section>
+                    <form class="cmt" action="/message" method='POST'>
+                        <div class="form-group">
+                            <h3>Leave message for {{session['first_name']}}
+                                   <select name="user_id"  class="input-xxlarge">
+                                        <!--{% for student in students %}-->   
+                                            <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                                        <!--{% endfor %}-->    
+                                   </select> 
+                            </h3>
+                          
+                            <input type="text" class="form-control" name = "message" placeholder="Type Here">
+                        </div>
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-success">Post</button>
+                        </div>
+
+                    </form>
+                </section>
+            </div>
+        </div>
+        <!--{% if messages %}-->
+        <!--{% for message in messages %}-->                
+        <div class="row">
+            <div class="col-sm-12">
+                <section>
+                    <div class="jumbotron">
+                        <h5 class="display-3">{{message['content']}}<span class="pull-right">{{message['created_at']}}</span></h5>
+                        <!--<hr class="m-y-2">-->
+                        <p class="lead">{{message['content']}}</p>
+                         <!--{% if message['student_id'] == session['user_id'] %}-->
+                            <form action="/delete/{{message['id']}}" method='POST'>
+                                <input type="submit" class="btn btn-default" value="Delete Message">
+                            </form>
+                        <!--{% endif %}-->
+                        <!--{% for comment in message['comments'] %}-->
+                        <hr class="m-y-2">
+                        <div class="align-right"></div>
+                            <h5 class="display-3">{{comment['content']}}<span class="pull-right">{{comment['created_at']}}</span></h5>
+                            <!--<hr class="m-y-2">-->
+                            <p class="lead">{{comment['content']}}</p>
+                            <hr class="m-y-2">
+                         <!--{% endfor %}-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <section>
+                                    <form class="cmt" action="/comment/{{message['id']}}" method='POST'>
+                                        <div class="form-group">
+                                            <h3>Leave Comments</h3>
+                                            <input type="text" class="form-control" name = "comment" placeholder="Write a message">
+                                        </div>
+                                        <div class="pull-right">
+                                            <button type="submit" class="btn btn-success">Post</button>
+                                        </div>
+                                    </form>
+                                </section>
+                            </div>    
+                        </div>                       
+                    </div>
+                </section>
+            </div>
+        </div>                
+            <!--{% endfor %}-->
+        <!--{% endif %}-->
+    </div>
+</body>
+</html>
+</body>
+</html>

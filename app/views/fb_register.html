@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <title>&rAarr; School| App</title>
+    <meta name="description" content="school app.">
+    <meta name="author" content="">
+    <!-- IE Edge Meta tag (X means to render in the latest engine) -->
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Viewport , set to the natural device width and set the initial scale to 1.0 to stop shrinking of the website on Mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/bootstrap/css/bootstrap.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/css/form-elements.css') }}">
+
+   <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap/fonts/font-awesome.min.css') }}">
+
+    <!-- custom css-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="{{ url_for('static',filename='js/jquery-2.2.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='css/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Favicon
+        –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="shortcut icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+    <link rel="icon" href="{{url_for('static', filename='css/images/favicon.ico')}}" type="image/x-icon">
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse gradient"
+         data-spy="affix"
+         role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><span>User Dashboard | Test App</span></a>
+            </div><!-- navbar-header -->
+            <div class="collapse navbar-collapse" id="collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class=""><a href="/" data-offset="0">Home</a></li>
+                    <li><a href="/signin">Sign in</a></li>
+                </ul>
+            </div><!-- collapse navbar-collapse -->
+        </div><!-- container -->
+    </nav>
+
+    <div class="container">
+        <div class="row centered-form">
+            <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Register with Facebook</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" class="form-registration" action="/facebook_register" method="post">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                    <div class="form-group">
+                                        <label>First Name: </label>
+                                        <input type="text" id="first_name" name="first_name" class="form-control input-sm" placeholder="first name" value= '{{user_info.fname}}'>
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                      <div class="form-group">
+                                          <label>Last Name: </label>
+                                          <input type="text" id="last_name" name="last_name" class="form-control input-sm" placeholder="last name" value= "{{user_info.lname}}">
+                                      </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                      <div class="form-group">
+                                          <label>Email Address: </label>
+                                          <input type="text"  name="email" class="form-control input-sm" placeholder="email" value= '{{user_info.email}}'>
+
+                                      </div>
+                                </div>
+
+
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                      <div class="form-group">
+                                          <label>Phone Number:</label>
+                                          <input type="text"  name="phone_number" class="form-control input-sm" placeholder="xxx-xxx-xxxx">
+                                            {% with messages = get_flashed_messages(category_filter = ['phone']) %}
+                                            {% for message in messages %}
+                                            <p class="error">{{message}}</p>
+                                            {% endfor %}
+                                            {% endwith %}
+                                            {% with messages = get_flashed_messages(category_filter = ['invalid-phone']) %}
+                                            {% for message in messages %}
+                                            <p class="error">{{message}}</p>
+                                            {% endfor %}
+                                            {% endwith %}
+                                      </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12">
+                                      <div class="form-group">
+                                          <label>School Location:</label>
+                                          <input type="text"  name="school_location" class="form-control input-sm" placeholder="School Location">
+                                            {% with messages = get_flashed_messages(category_filter = ['loc']) %}
+                                            {% for message in messages %}
+                                            <p class="error">{{message}}</p>
+                                            {% endfor %}
+                                            {% endwith %}
+                                      </div>
+                                </div>
+                              <input type="submit" value="Submit" class="btn btn-success btn-block">
+                                <br>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
